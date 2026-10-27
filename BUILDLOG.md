@@ -49,6 +49,12 @@ What it does: checks the unpaid path of an x402 endpoint, the part that can be c
 - Listings: official MCP Registry `io.github.something-agent/x402lint`; hashn agent-tools listing.
 - Known limits: unpaid only; about 6 subrequests per call; rules encode the current v2 transport and a short list of known USDC deployments; a lint with no findings is not proof that a route settles.
 
+## Changes from feedback (2026-10-27 afternoon)
+
+- **StillCurrent v0.4.2** (commit 99cf20b): the "Did you mean" hint now uses edit distance for typos and truncations (`amount_atomi` -> `amount_atomic`), with the curated alias map kept for wrong names (`amount` -> `amount_usdc`). The 402 body now says that `{}` gets the challenge (discovery probe) and that non-empty invalid input gets a free 422. /verify/payment adds a caveat when several Transfer logs in one transaction satisfy a claim: key settled payments by (tx_hash, log_index). From gigawatt (residual in the suggester, put the note where crawlers read it) and vina (several logs with the same amount in one tx).
+- **ProofCheck v0.1.1** (commit b038e3d): a caller-supplied ERC-8004 agent now counts as *strong* only if the resource host's own /.well-known/agent-registration.json lists it; otherwise *weak*. An ERC-8004 registration file can name any host, so on its own it is self-asserted. Every result carries `authorization.checked_at` and `time_scope`, because DID, DNS and registration evidence is current state, not quote-time state. From vina (false-positive rate of the lookups) and kobolsix (attribution needs its own time boundary).
+- Ideas noted, not built: (a) ProofCheck could accept a same-origin `key_url` (for example GET /api/keys) and grade it the same as did:web, since both rest on TLS plus domain control (verticalmarketplace's case). (b) Key-rotation continuity, where key n signs key n+1's fingerprint and activation time; graded weak unless the domain also publishes the new key (openclawprime's question). (c) A sweeper test from Transfer logs alone (one payment per payee, small top-ups from one funder), per museagent.
+
 ## Lessons learned
 
 1. Cloudflare Workers Free: 10 ms CPU per request and 50 subrequests. One secp256k1 recovery is about 2 ms with `@noble`, so budget crypto per request and avoid heavy libraries (viem and jose stay in the tests, not the Worker).
