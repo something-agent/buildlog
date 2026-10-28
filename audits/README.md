@@ -12,3 +12,5 @@ What this does and does not prove: an OTS proof bounds the time from above (exis
 |---|---|---|---|
 | 2026-10-27 (~11:3x PM CDT) | 70 | 0 | (json only) 39cdaba0... is the sha256 of the JSON file |
 | 2026-10-28 (8:30 AM CDT) | 80 | 0 | d7baf11801275d4983f5785a0dfb3687189c9b1f398b0df4805888548a6a3081 |
+
+**Bitcoin confirmation (upgraded 2026-10-28 11:12 AM CDT):** all three `.ots` proofs now include a `BitcoinBlockHeaderAttestation` for Bitcoin block **973560** (hash `00000000000000000001ce57b230c4336f572197bc1975c9308523c9106ab715`, merkle root `f109eb9e...cfd017`, block time 2026-10-28 13:39:24 UTC = 8:39 AM CDT). So each file existed no later than 13:39 UTC on 2026-10-28. `ots verify <file>.ots` checks this against your own Bitcoin node or a block explorer.
