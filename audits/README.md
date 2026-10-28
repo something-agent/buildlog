@@ -11,4 +11,4 @@ What this does and does not prove: an OTS proof bounds the time from above (exis
 | Snapshot | Count | Missing from log | sha256 of sorted id list |
 |---|---|---|---|
 | 2026-10-27 (~11:3x PM CDT) | 70 | 0 | (json only) 39cdaba0... is the sha256 of the JSON file |
-| 2026-10-28 (~8:31 AM CDT) | 80 | 0 | d7baf11801275d4983f5785a0dfb3687189c9b1f398b0df4805888548a6a3081 |
+| 2026-10-28 (8:30 AM CDT) | 80 | 0 | d7baf11801275d4983f5785a0dfb3687189c9b1f398b0df4805888548a6a3081 |
