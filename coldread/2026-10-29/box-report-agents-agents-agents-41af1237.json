@@ -1,0 +1,412 @@
+{
+  "report": {
+    "report_version": "coldread/1",
+    "report_id": "5c0385f7-d329-4528-9651-e2f8d1bd3a6e",
+    "subject": {
+      "url": "https://agents-agents-agents.com/v1/x402/pass",
+      "host": "agents-agents-agents.com",
+      "method": "GET"
+    },
+    "checked_at": "2026-10-29T13:16:08.658Z",
+    "service": {
+      "name": "ColdRead",
+      "version": "0.1.5",
+      "repo": "https://github.com/something-agent/coldread",
+      "operator": "something (an autonomous agent with an anonymous human operator)",
+      "libraries": {
+        "proofcheck": {
+          "version": "0.1.4",
+          "commit": "887cecf"
+        },
+        "x402lint": {
+          "version": "0.2.5",
+          "commit": "7d8ef69"
+        }
+      }
+    },
+    "overall": "no_red_flags",
+    "overall_meaning": "Nothing ColdRead checks looked wrong. This is not an endorsement and says nothing about settlement or delivery (see cannot_check).",
+    "signals": [
+      {
+        "id": "E003",
+        "severity": "good",
+        "part": "endpoint",
+        "text": "x402lint: the unpaid 402 challenge and discovery look well-formed (unpaid path only)"
+      },
+      {
+        "id": "S000",
+        "severity": "info",
+        "part": "signed_offers",
+        "text": "no signed offers (x402 offer-receipt extension is optional); the terms are not signed"
+      },
+      {
+        "id": "I000",
+        "severity": "info",
+        "part": "erc8004",
+        "text": "no ERC-8004 identity published by the host"
+      },
+      {
+        "id": "P000",
+        "severity": "info",
+        "part": "payers",
+        "text": "no USDC received on Base by the payTo in the last ~27.8 h"
+      }
+    ],
+    "parts": {
+      "endpoint": {
+        "verdict": "ok",
+        "verdict_meaning": "ok means the unpaid 402 challenge and discovery look well-formed to a client or directory. It says nothing about whether payments settle, are bound to the request, or deliver the paid response; see paid_path_checks.",
+        "summary": {
+          "x402_version": 2,
+          "accepts": 3,
+          "prices": [
+            "0.999692 USDC",
+            "0.997982 USDC"
+          ],
+          "extensions": [
+            "bazaar"
+          ],
+          "method": "GET",
+          "challenge_in": "header"
+        },
+        "probes": {
+          "get": {
+            "status": 402,
+            "ms": 370,
+            "redirects": 0
+          },
+          "well_known_x402": 200,
+          "well_known_pay_tos": [
+            "0x0ec16effdd44ac78b2dc53b36de7ac27554535fa"
+          ],
+          "well_known_payto": "match",
+          "llms_txt": 200,
+          "openapi_json": 200,
+          "alt_auth": [
+            "pass (http: bearer)"
+          ]
+        },
+        "counts": {
+          "error": 0,
+          "warn": 0,
+          "info": 3
+        },
+        "findings": [
+          {
+            "id": "X116",
+            "severity": "info",
+            "message": "asset XNO is not a USDC deployment I recognise; clients must trust and support it.",
+            "where": "accepts[1]"
+          },
+          {
+            "id": "X120",
+            "severity": "info",
+            "message": "accepts[] uses 3 different payTo addresses; make sure that is intentional."
+          },
+          {
+            "id": "X014",
+            "severity": "info",
+            "message": "Documented non-x402 access: pass (http: bearer). A caller holding these credentials may get 2xx with no 402 first; that is a second rail, not a missing payment path. This lint only sees the unauthenticated path."
+          }
+        ],
+        "directories": [
+          {
+            "directory": "x402dash",
+            "status": "ready",
+            "checks": [
+              {
+                "ok": true,
+                "text": "unpaid GET returns 402 (got 402)"
+              },
+              {
+                "ok": true,
+                "text": "402 carries a parseable accepts[] list"
+              }
+            ],
+            "source": "observed 2026-10-26: its register endpoint probes the URL with GET and rejects anything that is not a 402",
+            "note": "If your paid route is POST-only, also answer unpaid GET with the same 402 (never serve or settle on GET)."
+          },
+          {
+            "directory": "x402scan",
+            "status": "ready",
+            "checks": [
+              {
+                "ok": true,
+                "text": "runtime probe gets a v2 402 with accepts[]"
+              },
+              {
+                "ok": true,
+                "text": "discoverable from the origin: /openapi.json operation with x-payment-info.protocols[{x402}] or the URL listed in /.well-known/x402"
+              },
+              {
+                "ok": true,
+                "text": "an input schema is published (bazaar info.input or an OpenAPI requestBody)"
+              },
+              {
+                "ok": false,
+                "text": "OpenAPI info.x-guidance present (recommended, tells agents how to call you)"
+              }
+            ],
+            "source": "x402scan.com/resources/register docs as read 2026-10-21",
+            "note": "Register at https://x402scan.com/resources/register; it reads /openapi.json first and falls back to /.well-known/x402."
+          },
+          {
+            "directory": "the402",
+            "status": "ready",
+            "checks": [
+              {
+                "ok": true,
+                "text": "x402Version 2 challenge"
+              },
+              {
+                "ok": true,
+                "text": "no error-level x402lint findings (0)"
+              },
+              {
+                "ok": true,
+                "text": "challenge in the PAYMENT-REQUIRED header (v2 clients read the header)"
+              }
+            ],
+            "source": "observed 2026-10-25: listing runs a validator that must return verdict 'payable' for a v2 route",
+            "note": "A clean x402lint run is a good proxy for its validator, not a guarantee."
+          },
+          {
+            "directory": "Bazaar (CDP / PayAI)",
+            "status": "not_ready",
+            "checks": [
+              {
+                "ok": true,
+                "text": "extensions.bazaar present in the 402"
+              },
+              {
+                "ok": true,
+                "text": "bazaar info.input and info.output examples present"
+              },
+              {
+                "ok": false,
+                "text": "bazaar JSON schema present"
+              },
+              {
+                "ok": false,
+                "text": "resource description 1-500 chars (559)"
+              },
+              {
+                "ok": true,
+                "text": "host is not a tunnel/preview domain (agents-agents-agents.com)"
+              },
+              {
+                "ok": true,
+                "text": "https"
+              },
+              {
+                "ok": true,
+                "text": "GET/HEAD health probes get a 402 or 405 (PayAI hides resources after 3 failed probes in 48 h)"
+              }
+            ],
+            "source": "docs.cdp.coinbase.com x402 Bazaar and facilitator.payai.network discovery, as read 2026-10-20",
+            "note": "Both Bazaars index a resource only after a real payment settles through their facilitator with the bazaar extension echoed. Run `paidpath pay` once (to your own wallet) to trigger it. CDP also needs a CDP facilitator account."
+          }
+        ]
+      },
+      "live_challenge": {
+        "http_status": 402,
+        "final_url": "https://agents-agents-agents.com/v1/x402/pass",
+        "x402_version": 2,
+        "accepts": [
+          {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "pay_to": "0x0EC16EfFDD44ac78B2dc53B36de7ac27554535fa",
+            "amount": "995634",
+            "max_timeout_seconds": 300
+          },
+          {
+            "scheme": "exact",
+            "network": "nano:mainnet",
+            "asset": "XNO",
+            "pay_to": "nano_1w3xqs35iapy11kwurkgnt9gr9auzqf57pwi7w54u3tzb88piqe3h1b9gqfg",
+            "amount": "2499999749700000000000000000000",
+            "max_timeout_seconds": 300
+          },
+          {
+            "scheme": "exact",
+            "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+            "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "pay_to": "AdJi6ogM38BvM5GppYj5bLuMg8Tw4khYB4jtNhDVydgG",
+            "amount": "995266",
+            "max_timeout_seconds": 300
+          }
+        ],
+        "extensions": [
+          "bazaar"
+        ]
+      },
+      "signed_offers": {
+        "has_extension": false,
+        "offers_found": 0,
+        "offers_checked": 0,
+        "results": []
+      },
+      "erc8004": {
+        "status": "none_published",
+        "source": "host_well_known",
+        "host": "agents-agents-agents.com",
+        "detail": "no /.well-known/agent-registration.json (agent-registration.json HTTP 404)"
+      },
+      "payers": {
+        "status": "ok",
+        "chain": "eip155:8453",
+        "asset": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+        "pay_to": [
+          "0x0ec16effdd44ac78b2dc53b36de7ac27554535fa"
+        ],
+        "method": "USDC Transfer logs to the payTo over the window (public RPC eth_getLogs). For the top payers by count, their outgoing USDC transfers over a shorter lookback are counted to see how many different payees they pay.",
+        "labels_meaning": {
+          "self": "payer is the payTo itself (self-test or keep-alive), never demand",
+          "known_sweeper": "an address ColdRead has documented paying hundreds of payees once each (catalogue sweeper or crawler)",
+          "broad_payer": "paid 20+ different payees in the lookback window: sweeper-like or an aggregator; not by itself proof of anything",
+          "repeat_or_narrow": "not self, not known, paid fewer than the broad threshold of payees: consistent with a chosen buyer, but not proven independent (one operator can run many wallets)",
+          "unclassified": "outside the top payers we classify per request"
+        },
+        "window": {
+          "from_block": 53195212,
+          "to_block": 53245211,
+          "blocks": 50000,
+          "approx_hours": 27.8,
+          "failed_chunks": 0,
+          "rpc": "base-rpc.publicnode.com"
+        },
+        "lookback_blocks_for_classification": 20000,
+        "inbound": {
+          "transfers": 0,
+          "usdc": 0,
+          "distinct_payers": 0
+        },
+        "self_payments": {
+          "transfers": 0,
+          "usdc": 0
+        },
+        "repeats": {
+          "payers": 0,
+          "with_2plus_transfers": 0,
+          "burst_only": 0,
+          "returned_after_1h": 0,
+          "definition": "with_2plus_transfers counts every non-self payer with 2+ inbound transfers in the window; burst_only = all of them within 1800 blocks (~1 h at 2 s/block), returned_after_1h = first and last more than that apart. Only the window is seen, so a buyer returning across days is undercounted."
+        },
+        "top_payer_share": null,
+        "by_label": {
+          "self": {
+            "transfers": 0,
+            "usdc": 0
+          },
+          "known_sweeper": {
+            "transfers": 0,
+            "usdc": 0
+          },
+          "broad_payer": {
+            "transfers": 0,
+            "usdc": 0
+          },
+          "repeat_or_narrow": {
+            "transfers": 0,
+            "usdc": 0
+          },
+          "unclassified": {
+            "transfers": 0,
+            "usdc": 0
+          }
+        },
+        "payers": [],
+        "limits": [
+          "recent window only (50,000 Base blocks, about 28 hours); older history is not read",
+          "only USDC on Base; other networks in accepts[] are not summarised",
+          "labels are hypotheses from transfer patterns; one operator can control many wallets, and exchange-funded wallets look independent",
+          "a transfer to the payTo is not proof that it paid for this route (the payTo may serve several routes or receive other funds)"
+        ]
+      }
+    },
+    "freshness": {
+      "checked_at": "2026-10-29T13:16:08.658Z",
+      "terms_fingerprint": {
+        "algo": "sha256(JCS(sort_by_JCS([{scheme,network,asset:lower,pay_to:lower,amount:string}])))",
+        "hex": "abfdd0a88f73d823db3ca7e95fbfbf112c0736cc907f8951bec2d1ddc139c26b",
+        "entries": 3
+      },
+      "payee_fingerprint": {
+        "algo": "sha256(JCS(sort_by_JCS([{scheme,network,asset:lower,pay_to:lower}])))",
+        "hex": "9a1e6dbd3f0475fb0b11434795aec5fe72485ae2c9225da1e9a90656f19a8465"
+      },
+      "terms": [
+        {
+          "scheme": "exact",
+          "network": "nano:mainnet",
+          "asset": "xno",
+          "pay_to": "nano_1w3xqs35iapy11kwurkgnt9gr9auzqf57pwi7w54u3tzb88piqe3h1b9gqfg",
+          "amount": "2499999749700000000000000000000"
+        },
+        {
+          "scheme": "exact",
+          "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+          "asset": "epjfwdd5aufqssqem2qn1xzybapc8g4weggkzwytdt1v",
+          "pay_to": "adji6ogm38bvm5gppyj5blumg8tw4khyb4jtnhdvydgg",
+          "amount": "995266"
+        },
+        {
+          "scheme": "exact",
+          "network": "eip155:8453",
+          "asset": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+          "pay_to": "0x0ec16effdd44ac78b2dc53b36de7ac27554535fa",
+          "amount": "995634"
+        }
+      ],
+      "amount_tolerance_bps": 100,
+      "challenge_pay_tos": [
+        "0x0ec16effdd44ac78b2dc53b36de7ac27554535fa"
+      ],
+      "offer_signers": [],
+      "discovery_status": "read",
+      "discovery_pay_tos": [
+        "0x0ec16effdd44ac78b2dc53b36de7ac27554535fa"
+      ],
+      "suggested_max_age_hours": 24,
+      "stale_if": [
+        "the live challenge's payee fingerprint differs (payTo, asset, network or scheme changed), or an amount moved by more than amount_tolerance_bps: re-run the check before paying",
+        "a signed offer is now signed by a key not in offer_signers, or a listed key was revoked",
+        "the host's /.well-known/x402 now lists payTo addresses and none of them is a payTo in the live challenge (discovery and challenge conflict)",
+        "checked_at is older than suggested_max_age_hours (24 h); payer history and identity bindings drift"
+      ],
+      "how_to_compare": "node verify.mjs <report> --live  (re-fetches the subject's unpaid 402, recomputes the fingerprint and reports age; never pays)"
+    },
+    "cannot_check": [
+      "whether a payment settles or the paid response is delivered (ColdRead never pays)",
+      "the quality or truth of the paid content",
+      "who controls the payTo wallet beyond the published bindings (did:web, DNS, ERC-8004) we can see",
+      "payer history older than the stated window, and payments on networks other than Base USDC",
+      "whether distinct payer wallets belong to distinct people",
+      "anything that changed after checked_at"
+    ],
+    "method_notes": {
+      "subrequests_used": 9,
+      "elapsed_ms": 2916,
+      "execution": "single process",
+      "never_pays": true,
+      "never_signs_payments": true,
+      "run_from": "box"
+    },
+    "disclaimer": "Not a rating agency: this describes software behaviour and public chain facts at checked_at, not creditworthiness, and is not financial advice."
+  },
+  "digest": {
+    "alg": "sha256",
+    "canonicalization": "JCS (RFC 8785)",
+    "hex": "41af1237b5872b4ed8c87b0f278b8301bc8454e2a0c510dab31dd8135eeb8324"
+  },
+  "signature": {
+    "alg": "Ed25519",
+    "key_id": "coldread-2026-10-28",
+    "public_key": "UMbgYt761I-KAv3efV6JFtBAzcpw_wLvNmkbMt67M-4",
+    "signed_message": "coldread-report-v1:<digest.hex>",
+    "value": "lD-QFVhamOp1gIzB8mhiXCCyRvNMXvuWnr5XhRK-B6GUEE3a3rFk1CR0RgvPJFFnTGF0vf7vfJAKa-pv-Dn7Dw",
+    "keys_url": "https://coldread.something-agent.workers.dev/.well-known/coldread-keys.json"
+  }
+}
