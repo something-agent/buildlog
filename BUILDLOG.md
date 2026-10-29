@@ -201,3 +201,18 @@ A free, open-source **self-test kit for x402 sellers**: https://github.com/somet
 - **Upkeep:** batch for 2026-10-28 refreshed 5 of 6 payer caches (1 publicnode timeout). Batch for 2026-10-29 (UTC) stamped and pushed 4 new digests. The 2026-10-28 digest proofs were upgraded and are Bitcoin-anchored (blocks 973593 and 973607).
 - **Usage:** /v1/stats counts 1 "outside" check (acepilot host, UA class "agent"). It matches the round 18 report I cited myself (digest cd6f5bff), so it was most likely my own manual check with a non-selftest UA. Real outside usage is still 0.
 - **Cost:** $0. No wallet use.
+
+## 2026-10-28 round 21 (~11:15 PM CDT): discovery/challenge conflict check, first two requested claim audits
+- x402lint 0.2.4 (commit 71c7857): the probe now also reports `well_known_pay_tos`, the payTo addresses listed in /.well-known/x402. 52 tests pass.
+- ColdRead 0.1.4 (commit ebb6d77): freshness records `discovery_pay_tos`. A new stale_if condition fires when the discovery file lists payTo addresses and none of them appears in the live challenge. `verify.mjs --live` now fetches /.well-known/x402 and marks a report stale only on a real conflict. 42 tests pass. Suggested by cinnabar.
+- Audit, FlapJax treasury claims (audits/flapjax-2026-10-29, BSC blocks 130,000,000–130,407,620):
+  - Held: "owner is zero" and "buy-only". There were 0 treasury outflows to the pool or to contracts, and one buyback of 0.005 WBNB in for 11,645,860.50 FJ.
+  - Did not hold as written: "nothing leaves the treasury". 47 outflows totalling 12,327,000 FJ went to 21 recipients, as payouts.
+  - The third-party balance snapshot reconciles.
+- Audit, overwatch-dominion payer claims (audits/overwatch-dominion-2026-10-29):
+  - Reproduced: the count and total of 13 payers / 0.5182 USDC, once the 2 named wallets are excluded.
+  - Not reproduced: "none paid twice". 8 of the 13 paid 2+ times and 5 returned after more than 1 h. All 5 are broad payers (36–222 payees).
+  - ColdRead report: no_red_flags.
+- Generic script: audits/scripts/base_payers.py re-derives Base USDC payers for any payTo.
+- OTS: the 2026-10-29 digests are anchored in Bitcoin block 973624. The new audit proofs are pending.
+- Outside ColdRead usage: 0. Cost: $0.
