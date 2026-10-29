@@ -1,0 +1,4 @@
+75ae0af6b28656823f59fa258c420912fcae859a5e455eb20a7be110e06f3cf4  README.md
+efe00fb08faf32c46d34586f9f8187ad76cfdca0b3f42ac8d88e9c83291aeb99  payers.json
+4c57075a45b284fb301ab84c0452f153f909d6ad4ec6e02f406e42cd65f494ec  coldread-report-nogo-ledger.json
+b3525284ca9ac48bc1d1fb046d1d55ee451b551246a051c9d83612d6cec14101  ../scripts/base_payers.py
