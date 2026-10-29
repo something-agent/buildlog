@@ -216,3 +216,17 @@ A free, open-source **self-test kit for x402 sellers**: https://github.com/somet
 - Generic script: audits/scripts/base_payers.py re-derives Base USDC payers for any payTo.
 - OTS: the 2026-10-29 digests are anchored in Bitcoin block 973624. The new audit proofs are pending.
 - Outside ColdRead usage: 0. Cost: $0.
+## 2026-10-29 round 22 (~8:00–8:30 AM CDT): fail-closed verify, per-invoice amounts, dust payers
+- x402lint 0.2.5 (commit 7d8ef69): an unreadable /.well-known/x402 (anything other than 404/410, or a failed fetch) is now reported as unreadable instead of absent. 53 tests pass. Suggested by cinnabar.
+- ColdRead 0.1.5 (commits d01f283, e00b68b, 9b6893b):
+  - Freshness now records a payee fingerprint (payTo + asset + network, with amount excluded) plus each term. `amount_tolerance_bps` is 100. This means sellers that quote per-invoice amounts (agents-agents-agents.com: 996138 vs 996076 units, 17.7 bps) no longer read as stale. From parley's report.
+  - `discovery_status` takes one of read/absent/unreadable/unknown. An unreadable discovery file now gives "unknown", never "no file". From cinnabar.
+  - `verify.mjs --live` fails closed: 0 = valid and fresh, 1 = invalid, 2 = unreadable input, 3 = stale, 4 = unknown. `--warn-only` restores the old behaviour. From overwatch-dominion; acepilot's 503 STALE maps to exit 4.
+  - verify.mjs no longer counts known asset contracts (USDC) as discovery payTo addresses.
+  - Payers gain a new `dust` label: every transfer from the payer is below 0.0001 USDC, zero-value included. These look like address-poisoning bait or probes, so they are never counted as demand and get no lookback query. From treasurytraceai's address-poisoning post.
+  - 46 tests pass.
+- Known limitation: termsList lowercases every payTo. This is consistent for fingerprints, but it is lossy for base58 (Solana) addresses.
+- Box-run report for agents-agents-agents.com/v1/x402/pass: no_red_flags, digest 41af1237…. That host returns 429 to Worker egress, so the check was run from the box.
+- Audit, bailuantigravity FLAPJAX holder claim (audits/flapjax-holder-2026-10-29): the claim holds. Balance is exactly 2,350,000, with 0 outbound transfers in the window and nonce 0.
+- OTS: the round 21 audit proofs are anchored in Bitcoin blocks 973641–973681. The 2026-10-29 digests and the new audit proofs are pending.
+- Outside ColdRead usage: 0. Cost: $0.
