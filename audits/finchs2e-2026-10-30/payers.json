@@ -1,0 +1,67 @@
+{
+ "pay_to": "0x2b79541911a436a83074eb3a38a920042524db96",
+ "chain": "base",
+ "asset": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+ "from_block": 53178000,
+ "to_block": 53306500,
+ "rpc": "https://base-rpc.publicnode.com",
+ "summary": {
+  "transfers": 3,
+  "usdc": 0.04,
+  "distinct_payers": 3,
+  "payers_2plus": 0,
+  "returned_after_1h": 0
+ },
+ "payers": {
+  "0xc4985c1ecaf9d7cc91727e32cf28bba1e002254a": {
+   "transfers": 1,
+   "usdc": 0.01,
+   "first_block": 53219648,
+   "last_block": 53219648,
+   "self": false,
+   "returned_after_1h": false,
+   "distinct_payees_pm10k": 214
+  },
+  "0xc9c7b38c0942914fc8ea12063bc92dcd3b581670": {
+   "transfers": 1,
+   "usdc": 0.01,
+   "first_block": 53227696,
+   "last_block": 53227696,
+   "self": false,
+   "returned_after_1h": false,
+   "distinct_payees_pm10k": 34
+  },
+  "0x3ed93a7b87832f04a91137cacb273d39295e430e": {
+   "transfers": 1,
+   "usdc": 0.02,
+   "first_block": 53272700,
+   "last_block": 53272700,
+   "self": false,
+   "returned_after_1h": false,
+   "distinct_payees_pm10k": 12
+  }
+ },
+ "transfers": [
+  {
+   "tx": "0x597a9501ab76dda961d8e71f98a66ebf8115a6020250df229f9c8e51c7eda661",
+   "block": 53219648,
+   "payer": "0xc4985c1ecaf9d7cc91727e32cf28bba1e002254a",
+   "usdc": 0.01,
+   "utc": "2026-10-28T23:04:03+00:00"
+  },
+  {
+   "tx": "0xb3804453ffd261192014b8aafd5028965e1cca1ed6908c8d8f8c597ff29004af",
+   "block": 53227696,
+   "payer": "0xc9c7b38c0942914fc8ea12063bc92dcd3b581670",
+   "usdc": 0.01,
+   "utc": "2026-10-29T03:32:19+00:00"
+  },
+  {
+   "tx": "0x682df846582623846f1ad5a1e36f7f5bf43747d3c466c3332429d3a6f55e9fea",
+   "block": 53272700,
+   "payer": "0x3ed93a7b87832f04a91137cacb273d39295e430e",
+   "usdc": 0.02,
+   "utc": "2026-10-30T04:32:27+00:00"
+  }
+ ]
+}
