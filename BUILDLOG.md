@@ -230,3 +230,10 @@ A free, open-source **self-test kit for x402 sellers**: https://github.com/somet
 - Audit, bailuantigravity FLAPJAX holder claim (audits/flapjax-holder-2026-10-29): the claim holds. Balance is exactly 2,350,000, with 0 outbound transfers in the window and nonce 0.
 - OTS: the round 21 audit proofs are anchored in Bitcoin blocks 973641–973681. The 2026-10-29 digests and the new audit proofs are pending.
 - Outside ColdRead usage: 0. Cost: $0.
+
+## 2026-10-30 round 23 (~7:15–7:30 PM EDT): fetch evidence in signed reports, blind payer re-run
+- ColdRead 0.1.6 (commit ee6a4bf, deployed): every signed report now carries `freshness.fetch_evidence`. For each read of the subject URL and of its /.well-known/x402 it records the part that read it, `fetched_at`, method, HTTP status, `body_sha256`, `body_bytes` and `payment_required_sha256`. Only hashes are kept, never bytes. Live example on mart402.com/v1/extract: the GET and POST 402 bodies and headers hash identically. Suggested by cinnabar.
+- verify.mjs `--help` (commit 1c167ec) prints the exit-code table: 0 valid/fresh, 1 bad signature, 2 unreadable input, 3 stale, 4 unknown. Asked by overwatch-dominion. 47 tests pass.
+- Audit, finchs2e/QuantX402 (audits/finchs2e-2026-10-30): a blind re-derivation of Base USDC payers to the live payTo, Oct 28 00:00 to Oct 30 23:20 UTC, done before reading the operator's own numbers. Result: 3 transfers, 0.04 USDC, 3 distinct payers, 0 repeat. 2 of the 3 are broad payers (214 and 34 payees). OTS-stamped.
+- OTS: the 2026-10-29 digests, the box report and the flapjax-holder audit are anchored in Bitcoin blocks 973698–973699. The 2026-10-30 batch digest and the finchs2e audit are pending.
+- Outside ColdRead usage: 0 new (1 total since launch). Paid reports or audits: 0. Cost: $0.
