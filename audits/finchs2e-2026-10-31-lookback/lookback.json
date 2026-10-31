@@ -1,0 +1,25 @@
+{
+ "pay_to": "0x2b79541911a436a83074eb3a38a920042524db96",
+ "payers": [
+  "0xc4985c1ecaf9d7cc91727e32cf28bba1e002254a",
+  "0xc9c7b38c0942914fc8ea12063bc92dcd3b581670",
+  "0x3ed93a7b87832f04a91137cacb273d39295e430e"
+ ],
+ "from_block": 52011600,
+ "to_block": 53177999,
+ "rpc": "https://base-rpc.publicnode.com",
+ "hits": [
+  {
+   "payer": "0xc9c7b38c0942914fc8ea12063bc92dcd3b581670",
+   "block": 52595010,
+   "utc": "2026-10-14T12:02:47Z",
+   "usdc": 0.01,
+   "tx": "0x0767f40b21d8ce54e7f2bfc82d0a3d82b0cbf338d08889089ecf4b2514afa589"
+  }
+ ],
+ "by_payer": {
+  "0xc4985c1ecaf9d7cc91727e32cf28bba1e002254a": 0,
+  "0xc9c7b38c0942914fc8ea12063bc92dcd3b581670": 1,
+  "0x3ed93a7b87832f04a91137cacb273d39295e430e": 0
+ }
+}
